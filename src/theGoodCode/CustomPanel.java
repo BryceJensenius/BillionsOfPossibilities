@@ -20,6 +20,18 @@ class CustomPanel extends JPanel {
     private Timer time;
     private int runTime;
     private boolean win = false;
+    
+    //Color codes
+    private int r;
+    private int g;
+    private int b;
+    
+    //toggle ensures color is more likely to move around
+    //start at 2 otherwise it might never enter a high/low value
+    //therefore getting stuck at 0;
+    private int toggleR = 2;
+    private int toggleG = 2;
+    private int toggleB = 2;
 
     public CustomPanel(int width, int height, Player[] ps) {
     	runTime = (int) (System.nanoTime()/1000000000000.0);
@@ -33,6 +45,12 @@ class CustomPanel extends JPanel {
     	}
     	
     	random = new Random(width + height + seed);//Insanely random value
+    	
+    	//set initial random color
+    	//200 - 255 to start brighter
+    	r = random.nextInt()%56 + 200;
+    	g = random.nextInt()%56 + 200;
+    	b = random.nextInt()%56 + 200;
     }
     
     public void startGame() {
@@ -68,8 +86,8 @@ class CustomPanel extends JPanel {
         int y2 = lastLine.y2;
 
         // Generate a random end point for the new line
-        int newX = x2 + random.nextInt(100) - 50;
-        int newY = y2 + random.nextInt(100) - 50;
+        int newX = x2 + random.nextInt(101) - 50;
+        int newY = y2 + random.nextInt(101) - 50;
         
         // Ensure they are in window range
         newX = setIntoRangeX(newX);
@@ -86,6 +104,7 @@ class CustomPanel extends JPanel {
         	if(p.getClosestDistance() == 0) {
         		p.setTime((int)(System.nanoTime()/1000000000 - runTime));
         		win = true;
+        		time.stop();
         	}
         }
 
@@ -113,10 +132,53 @@ class CustomPanel extends JPanel {
     }
 
     private Color getRandomColor() {
-        float r = random.nextFloat();
-        float g = random.nextFloat();
-        float b = random.nextFloat();
+    	//toggle shifts to ensure colors cycle
+        r = nextColorRand(r+toggleR);
+        g = nextColorRand(g+toggleG);
+        b = nextColorRand(b+toggleB);
+        
+        setToggles();
+        
         return new Color(r, g, b);
+    }
+    
+    /*
+     * if less that 50, start increasing by extra 2
+     * if greater than 220, start decreasing by extra 2
+     */
+    private void setToggles() {
+    	if(r < 100) {
+        	toggleR = 3;
+        }else if(r > 250) {
+        	toggleR = -1;
+        }
+    	if(g < 100) {
+        	toggleG = 3;
+        }else if(g > 250) {
+        	toggleG = -1;
+        }
+    	if(b < 100) {
+        	toggleB = 3;
+        }else if(b > 250) {
+        	toggleB = -1;
+        }
+    }
+    
+    /*
+     * randomizes color slightly up or down and maps to 0-255 range
+     */
+    private int nextColorRand(int n) {
+    	//more likely to go up if it is smaller
+    	/*n += (random.nextInt()%5 - 2) + Math.min(7,(255.0/n));
+    	n = Math.min(255, Math.max(0, n));
+    	System.out.println(n);
+    	return n;
+    	*/
+    	
+    	n += random.nextInt()%5 - 2;
+    	n = Math.min(255, Math.max(0, n));
+    	System.out.println(n);
+    	return n;
     }
 
     @Override
