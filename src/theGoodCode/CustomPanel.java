@@ -177,7 +177,6 @@ class CustomPanel extends JPanel {
     	
     	n += random.nextInt()%5 - 2;
     	n = Math.min(255, Math.max(0, n));
-    	System.out.println(n);
     	return n;
     }
 
