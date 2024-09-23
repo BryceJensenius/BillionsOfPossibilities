@@ -6,7 +6,7 @@ At each ne location, players can see how far the current line is from the locati
 Whoever's point gets landed on first wins!
 You additionally choose the size of the window/game you want, a larger window means less likely to win.
 
-##Future Development:
+**Future Development**:
  - The idea would be you can gamble money on it landing on your point
  - Every Line drawn is a certain amount of money, you watch your money go down and can quit at any point, but wait, maybe the next one will be it...
  - Could also work with an online group, after a certain amount of time, the people who's points get the closest get rewarde based on how close
